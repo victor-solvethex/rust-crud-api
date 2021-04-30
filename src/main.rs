@@ -1,16 +1,17 @@
-use warp::hyper::StatusCode;
-use warp::Filter;
-
 mod data;
 mod db;
-mod error;
-mod handler;
+mod handlers;
+mod models;
+mod routes;
+
+use db::DB;
+use routes::router;
+
+pub type Result<T> = std::result::Result<T, warp::Rejection>;
 
 #[tokio::main]
 async fn main() {
-    let health_route = warp::path!("health").map(|| StatusCode::OK);
-
-    let routes = health_route.with(warp::cors().allow_any_origin());
-
+    let db: DB = DB::connect().await.expect("Error creating the db");
+    let routes = router(db);
     warp::serve(routes).run(([127, 0, 0, 1], 8000)).await;
 }

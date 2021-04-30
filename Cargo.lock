@@ -1322,6 +1322,7 @@ dependencies = [
 name = "warp-crud"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "chrono",
  "mobc",
  "mobc-postgres",
